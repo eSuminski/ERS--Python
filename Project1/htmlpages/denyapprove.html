@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="Colorlib Templates">
+    <meta name="author" content="Colorlib">
+    <meta name="keywords" content="Colorlib Templates">
+
+    <!-- Title Page-->
+    <title>Submit Reimbursement</title>
+
+    <!-- Icons font CSS-->
+    <link href="denyapprove/vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
+    <link href="denyapprove/vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
+    <!-- Font special for pages-->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" rel="stylesheet">
+
+    <!-- Vendor CSS-->
+    <link href="denyapprove/vendor/select2/select2.min.css" rel="stylesheet" media="all">
+    <link href="denyapprove/vendor/datepicker/daterangepicker.css" rel="stylesheet" media="all">
+
+    <!-- Main CSS-->
+    <link href="denyapprove/css/main.css" rel="stylesheet" media="all">
+</head>
+
+<body>
+    <div class="page-wrapper bg-blue p-t-100 p-b-100 font-robo">
+        <div class="wrapper wrapper--w680">
+            <div class="card card-1">
+                <div class="card-heading"></div>
+                <div class="card-body">
+                    <h2 class="title">Reimbursement Request</h2>
+                    <form method="POST">
+                        <div class="input-group">
+                            <input class="input--style-1" name="reimbursementID" id="reimbursementID" >
+                        </div>
+                        <div class="input-group">
+                            <input class="input--style-1" name="employeeID" id="employeeID" >
+                        </div>
+                        <div class="input-group">
+                            <input class="input--style-1" name="reimbursementAmmount" id="reimbursementAmmount" >
+                        </div>
+                        <div class="input-group">
+                            <input class="input--style-1" name="reimbursementReason" id="reimbursementReason" >
+                        </div>
+                        <div class="input-group">
+                            <input class="input--style-1" type="number" min="0" max="2" step="1" maxlength="1" placeholder="1 = APPROVED 2 = DENIED" name="approvalKeyInput" id="approvalKeyInput" oninput="validity.valid||(value='')" required>
+                        </div>
+                        <div class="input-group">
+                            <input class="input--style-1"type="text" maxlength="200" placeholder="REASON" name="approvalReasonInput" id="approvalReasonInput" required>
+                        </div>
+                        <div class="p-t-20">
+                            <button class="btn btn--radius btn--green" type="button" id="submitDenyApprove" onclick="denyApprove()"> Submit</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Jquery JS-->
+    <script src="submitreimbursement/vendor/jquery/jquery.min.js"></script>
+    <!-- Vendor JS-->
+    <script src="submitreimbursement/vendor/select2/select2.min.js"></script>
+    <script src="submitreimbursement/vendor/datepicker/moment.min.js"></script>
+    <script src="submitreimbursement/vendor/datepicker/daterangepicker.js"></script>
+
+    <!-- Main JS-->
+    <script src="submitreimbursement/js/global.js"></script>
+
+</body>
+<script>
+    const urlParams = new URLSearchParams(window.location.search)
+    const user = urlParams.get("user")
+    const ID = urlParams.get("reimbursementID")
+    const approvalKey = document.getElementById("approvalKeyInput")
+    const managerReason = document.getElementById("approvalReasonInput")
+    const rID = document.getElementById("reimbursementID")
+    const employeeID = document.getElementById("employeeID")
+    const reimbursementAmmount = document.getElementById("reimbursementAmmount")
+    const reason = document.getElementById("reimbursementReason")
+
+    async function getReimbursementInfo(anID){
+        const response = await fetch(`http://localhost:5000/manager?user=${user}`)
+        const reimbursements = await response.json()
+        console.log(reimbursements)
+        for (let option of reimbursements){
+            if(option.reimbursementID === Number(anID)){
+                console.log(option)
+                rID.value = option.reimbursementID
+                employeeID.value = option.employeeID
+                reimbursementAmmount.value = option.reimbursement
+                reason.value = option.reason
+            }
+        }
+    }
+getReimbursementInfo(ID)
+
+async function denyApprove(){
+
+const managerAdditions = {
+    reimbursementID: rID.value,
+    employeeID: employeeID.value,
+    reimbursement: reimbursementAmmount.value,
+    reason: reason.value,
+    approval:approvalKey.value,
+    managerComment:managerReason.value
+    }
+
+    const config = {
+        method:"PATCH",
+        headers:{'Content-Type':"application/json"},
+        body: JSON.stringify(managerAdditions)
+    }
+    const response = await fetch(`http://localhost:5000/manager`, config)
+    const body = await response.json()
+    if (body["successMessage"]){
+        alert(body.successMessage)
+    }
+    else if (body["catastrophe"]){
+        alert(body.catastrophe)
+    }
+    else{
+        alert("Something has gone very wrong")
+    }
+    window.location.href = `managerhomepage.html?user=${user}`
+}
+
+</script>
+
+</html>

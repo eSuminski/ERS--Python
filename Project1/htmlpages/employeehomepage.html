@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title id="employeeHomePage">Employee Homepage</title>
+<link rel="stylesheet" type="text/css" href="employeehomepage/styles.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+</head>
+<body>
+<div id="header">
+  <h1>Reimbursements Homepage</h1>
+</div>
+  <div id="wrapper">
+    <div id="content">
+      <h3>Reimbursements</h3>
+      <table class="table table-dark">
+        <thead>
+        <tr>
+            <th scope="col">Reimbursement ID</th>
+            <th scope="col">Employee ID</th>
+            <th scope="col">Reimbursement</th>
+            <th scope="col">Reason</th>
+            <th scope="col">Approval</th>
+            <th scope="col">Manager Comment</th>
+        </tr>
+        </thead>
+        <tbody id="reimbursementTableBody"></tbody>
+    </table>
+    </div>  
+    </div>
+  </div>
+  <div id="navigation">
+    <p><strong>Navigation Here</strong></p>
+    <ul>
+      <li><button class="btn-outline-dark" id="reimbursementRequestButton" type="button" onclick="submitReimbursement()">Submit Reimbursement Request</button></li>
+      <li><button class="btn-outline-dark btn-block" id="logoutButton" type="button" onclick="logout()">Logout</button></li>
+    </ul>
+  </div>
+  <div id="extra">
+    <p><strong>Approval Key</strong></p>
+    <p>0 = pending</p>
+    <p>1 = approved</p> 
+    <P>2 = denied</p>
+  </div>
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+<script>
+    const reimbursementTableBody = document.getElementById("reimbursementTableBody")
+    const urlParams = new URLSearchParams(window.location.search)
+    const user = urlParams.get("user")
+
+    async function getEmployeeReimbursementRequests(){
+        const response = await fetch(`http://localhost:5000/employee?user=${user}`)
+        const reimbursements = await response.json()
+        let innerRows = ""
+        if (reimbursements[`tableFail`]){
+            alert(reimbursements.tableFail)
+            logout()
+        }else{
+            for (let reimbursement of reimbursements){
+                innerRows += `<tr>
+                    <td>${reimbursement.reimbursementID}</td>
+                    <td>${reimbursement.employeeID}</td>
+                    <td>${reimbursement.reimbursement}</td>
+                    <td>${reimbursement.reason}</td>
+                    <td>${reimbursement.approval}</td>
+                    <td>${reimbursement.managerComment}</td>
+                    </tr>`
+            }
+            reimbursementTableBody.innerHTML = innerRows
+            }
+        
+    }
+
+    async function logout(){
+        sessionStorage.clear()
+        window.location.href = "login.html"
+    }
+
+    async function submitReimbursement(){
+        if (user === null){
+            alert("An error has occured: you will be redirected")
+            logout()
+        }
+        else{
+            window.location.href = `submitreimbursement.html?user=${user}`
+        }
+        
+    }
+
+    getEmployeeReimbursementRequests()
+
+</script>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title id="managerHomePage">Manager Homepage</title>
+<link rel="stylesheet" type="text/css" href="managerhomepage/styles.css" />
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+</head>
+<body>
+<div id="header">
+  <h1>Manager Homepage</h1>
+</div>
+  <div id="wrapper">
+    <div id="content">
+      <h3>All Reimbursements</h3>
+      <table class="table table-dark">
+        <thead>
+        <tr>
+            <th scope="col">Reimbursement ID</th>
+            <th scope="col">Employee ID</th>
+            <th scope="col">Reimbursement</th>
+            <th scope="col">Reason</th>
+            <th scope="col">Approval</th>
+            <th scope="col">Manager Comment</th>
+        </tr>
+        </thead>
+        <tbody id="managerReimbursementTableBody"></tbody>
+    </table>
+    </div>  
+    </div>
+  </div>
+  <div id="navigation">
+    <ul>
+      <li><button class="btn-outline-dark btn-block" id="logoutButton" type="button" onclick="logout()">Logout</button></li>
+    </ul>
+    <h5>Approval Key</h5>
+    <p>0 = pending</p>
+    <p>1 = approved</p>    
+    <p>2 = denied</p>
+  </div>
+  <div id="extra">
+    <h3>Stats</h1>
+    <h5>Most Reimbursement Requests</h5>
+    <p id="mostReimbursementRequests"></p>
+    <h5>Most Reimbursement Payouts</h5>
+    <p id="mostReimbursementPayouts"></p>
+    <h5>Average Reimbursement Payout</h5>
+    <p id="averageReimbursementPayout"></p>
+    <h5>Reimbursement Requests Total</h5>
+    <p id="reimbursementRequestsTotal"></p>
+    <h5>Reimbursement Requests Pending</h5>
+    <p id="reimbursementRequestsPending"></p>
+    <h5>Reimbursement Requests Approved</h5>
+    <p id="reimbursementRequestsApproved"></p>
+    <h5>Reimbursement Requests Denied</h5>
+    <p id="reimbursementRequestsDenied"></p>
+  </div>
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+</body>
+<script>
+    const reimbursementTableBody = document.getElementById("managerReimbursementTableBody")
+    const urlParams = new URLSearchParams(window.location.search)
+    const user = urlParams.get("user")
+    
+    const mostReimbursementRequests = document.getElementById("mostReimbursementRequests")
+    const mostReimbursementPayouts = document.getElementById("mostReimbursementPayouts")
+    const averageReimbursementPayout = document.getElementById("averageReimbursementPayout")
+    const reimbursementRequestsTotal = document.getElementById("reimbursementRequestsTotal")
+    const reimbursementRequestsPending = document.getElementById("reimbursementRequestsPending")
+    const reimbursementRequestsApproved = document.getElementById("reimbursementRequestsApproved")
+    const reimbursementRequestsDenied = document.getElementById("reimbursementRequestsDenied")
+
+    async function getAllEmployeeReimbursementRequests(){
+        const response = await fetch(`http://localhost:5000/manager?user=${user}`)
+        const reimbursements = await response.json()
+        console.log(reimbursements)
+        if (reimbursements[`tableFail`]){
+            alert(reimbursements.tableFail)
+            // logout()
+        }else if (reimbursements[`catastrophe`]){
+            alert(reimbursements.catastrophe)
+            // logout()
+        }
+        else{
+            let innerRows = ""
+            let approveDenyRowNumber = 1
+            let editRowNumber = 1
+            for (let reimbursement of reimbursements){
+                if (reimbursement.approval === 0){
+                    innerRows += `<tr>
+                        <td>${reimbursement.reimbursementID}</td>
+                        <td>${reimbursement.employeeID}</td>
+                        <td>${reimbursement.reimbursement}</td>
+                        <td>${reimbursement.reason}</td>
+                        <td>${reimbursement.approval}</td>
+                        <td>${reimbursement.managerComment}</td>
+                        <td><button onclick="denyApprove(${reimbursement.reimbursementID})" id="denyApproveButton${reimbursement.reimbursementID}">Deny/approve</button></td>
+                        </tr>`
+                }
+                else {
+                    innerRows += `<tr>
+                        <td>${reimbursement.reimbursementID}</td>
+                        <td>${reimbursement.employeeID}</td>
+                        <td>${reimbursement.reimbursement}</td>
+                        <td>${reimbursement.reason}</td>
+                        <td>${reimbursement.approval}</td>
+                        <td>${reimbursement.managerComment}</td>
+                        <td><button onclick="denyApprove(${reimbursement.reimbursementID})" id="editButton${reimbursement.reimbursementID}">Edit</button></td>
+                        </tr>`
+                }
+            }
+            reimbursementTableBody.innerHTML = innerRows
+        }
+    }
+
+    async function getMostReimbursementRequests(){
+        const response = await fetch(`http://localhost:5000/manager/most`)
+        const mostRequests = await response.json()
+        const greedyID = mostRequests.employeeID
+        mostReimbursementRequests.innerHTML = greedyID
+    }
+
+    async function getMostReimbursementPayouts(){
+        const response = await fetch(`http://localhost:5000/manager/payouts`)
+        const mostPayouts = await response.json()
+        const luckyID = mostPayouts.employeeID
+        mostReimbursementPayouts.innerHTML = luckyID
+    }
+
+    async function getAverageReimbursementPayout(){
+        const response = await fetch(`http://localhost:5000/manager/average`)
+        const averagePayout = await response.json()
+        const ammount = averagePayout.averagePayout
+        averageReimbursementPayout.innerHTML = ammount
+    }
+    
+    async function getReimbursementRequestsTotal(){
+        const response = await fetch(`http://localhost:5000/manager/total`)
+        const totalRequests = await response.json()
+        const total = totalRequests.totalRequests
+        reimbursementRequestsTotal.innerHTML = total
+    }
+
+    async function getReimbursementRequestsPending(){
+        const response = await fetch(`http://localhost:5000/manager/pending`)
+        const pendingRequests = await response.json()
+        const pending = pendingRequests.pendingRequests
+        reimbursementRequestsPending.innerHTML = pending
+    }
+
+    async function getReimbursementRequestsApproved(){
+        const response = await fetch(`http://localhost:5000/manager/approved`)
+        const approvedRequests = await response.json()
+        const approved = approvedRequests.approvedRequests
+        reimbursementRequestsApproved.innerHTML = approved
+    }
+
+    async function getReimbursementRequestsDenied(){
+        const response = await fetch(`http://localhost:5000/manager/denied`)
+        const deniedRequests = await response.json()
+        const denied = deniedRequests.deniedRequests
+        reimbursementRequestsDenied.innerHTML = denied
+    }
+
+    async function denyApprove(reimbursementID){
+        sessionStorage.setItem('reimbursementID', reimbursementID)
+        window.location.href = `denyapprove.html?user=${user}&reimbursementID=${sessionStorage.getItem("reimbursementID")}`
+    }
+
+    async function logout(){
+        sessionStorage.clear()
+        window.location.href = "login.html"
+    }
+
+    getAllEmployeeReimbursementRequests()
+    getMostReimbursementRequests()
+    getMostReimbursementPayouts()
+    getAverageReimbursementPayout()
+    getReimbursementRequestsTotal()
+    getReimbursementRequestsPending()
+    getReimbursementRequestsApproved()
+    getReimbursementRequestsDenied()
+</script>
+</html>

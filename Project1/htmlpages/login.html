@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+  <head>
+  	<title>Login</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	<link href="https://fonts.googleapis.com/css?family=Lato:300,400,700,900&display=swap" rel="stylesheet">
+
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
+	
+	<link rel="stylesheet" href="login/css/style.css">
+
+	</head>
+	<body>
+	<section class="ftco-section">
+		<div class="container">
+			<div class="row justify-content-center">
+				<div class="col-md-6 text-center mb-5">
+					<h2 class="heading-section">Viridian Dynamics: Reimbursements</h2>
+				</div>
+			</div>
+			<div class="row justify-content-center">
+				<div class="col-md-12 col-lg-10">
+					<div class="wrap d-md-flex">
+						<div class="text-wrap p-4 p-lg-5 text-center d-flex align-items-center order-md-last">
+							<div class="text w-100">
+								<h2>Welcome Home</h2>
+								<p>We're glad you're here</p>
+								<a href="https://youtu.be/Fpqp2MUEMvY" class="btn btn-white btn-outline-white">When you're here, you're family</a>
+							</div>
+						</div>
+						<div class="login-wrap p-4 p-lg-5">
+					<div class="d-flex">
+						<div class="w-100">
+							<h3 class="mb-4">Sign In</h3>
+						</div>		
+					</div>
+				<form action="#" class="signin-form">
+					<div class="form-group mb-3">
+						<label class="label" for="name">Username</label>
+						<input type="text" class="form-control" placeholder="Username" id="usernameInput">
+					</div>
+					<div class="form-group mb-3">
+						<label class="label" for="password">Password</label>
+						<input type="password" class="form-control" placeholder="Password" id="passwordInput">
+					</div>
+					<div class="form-group">
+						<button type="button" class="form-control btn btn-primary submit px-3" id="loginButton" onclick="login()">Sign In</button>
+					</div>
+				</form>
+				</div>
+				</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<script src="login/js/jquery.min.js"></script>
+  <script src="login/js/popper.js"></script>
+  <script src="login/js/bootstrap.min.js"></script>
+  <script src="login/js/main.js"></script>
+
+</body>
+<script>
+	const loginButton = document.getElementById("loginButton")
+    const usernameInput = document.getElementById("usernameInput")
+    const passwordInput = document.getElementById("passwordInput")
+
+    async function login(){
+        const httpResponse = await fetch(`http://localhost:5000/login?username=${usernameInput.value}&password=${passwordInput.value}`, {method: 'GET'})
+        const body = await httpResponse.json()
+        if (body['employeeID']){
+            const user = body.employeeID
+            localStorage.setItem('user', user)
+            window.location.href = `employeehomepage.html?user=${user}`
+        }
+        else if (body['managerID']){
+            const user = body.managerID
+            sessionStorage.setItem('user', user)
+            window.location.href = `managerhomepage.html?user=${user}`
+		} 
+		else if (body[`loginFail`]){
+			alert(body.loginFail)
+		}
+		else{
+			alert(body.catastrophe)
+		}
+
+
+    }
+</script>
+</html>
+
