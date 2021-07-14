@@ -32,12 +32,14 @@ This application was designed for Viridian Dynamics employees to be able to subm
 
 ## Getting Started
 - to clone:
-  -  git clone info here
+  -  git clone https://github.com/eSuminski/ERS--Python.git
 - Database:
   -  Create a local or cloud based Postgres RDS
   -  Use your prefered database management software to run Script-7.sql to set up the database
 - to deploy:
+  - install the application requirements found in the requirements.txt file, preferably in a virtual environment
   - navigate to the Pythoncode file in your chosen terminal
+  - py -m pip install -r requirements.txt  
   - use the command py main.py to start the application(currently no in-app way to end the application)
 
 ## Usage
