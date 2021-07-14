@@ -1,5 +1,5 @@
 # ERS--Python
-###My reimbursement application for Viridian Dynamics
+## My reimbursement application for Viridian Dynamics
 This application was designed for Viridian Dynamics employees to be able to submit reimbursement requests for their expenditures. Once their requests are submitted the managers may log in and either approve or deny the request.
 
 ## Technologies Used
@@ -18,5 +18,12 @@ This application was designed for Viridian Dynamics employees to be able to subm
 - Git
 
 ## Features
-- Employees can login to view and submit reimbursement requests
-- Managers can login to view and approve/deny reimbursement requests
+- Employees can login to view and submit reimbursement requests.
+- Managers can login to view and approve/deny reimbursement requests.
+  - Managers can view statistics about employee reimbursements.
+
+**to do**
+- update webpages to have uniform color/appearances.
+- create dynamic charts that represent the statistics currently shown in just numeric values.
+
+## Getting Started
