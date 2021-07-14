@@ -31,10 +31,11 @@ This application was designed for Viridian Dynamics employees to be able to subm
 - add an easy to use method to close the application
 
 ## Getting Started
-- Database:
-  -  
 - to clone:
   -  git clone info here
+- Database:
+  -  Create a local or cloud based Postgres RDS
+  -  Use your prefered database management software to run Script-7.sql to set up the database
 - to deploy:
   - navigate to the Pythoncode file in your chosen terminal
   - use the command py main.py to start the application(currently no in-app way to end the application)
