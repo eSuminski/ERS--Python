@@ -1,5 +1,5 @@
 
-DROP TABLE employees, managers, employee_login, manager_login, reimbursement;
+DROP TABLE If Exists employees, managers, employee_login, manager_login, reimbursement;
 
 CREATE TABLE employees(
 	employee_id serial PRIMARY KEY,
