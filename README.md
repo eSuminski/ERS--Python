@@ -18,12 +18,32 @@ This application was designed for Viridian Dynamics employees to be able to subm
 - Git
 
 ## Features
-- Employees can login to view and submit reimbursement requests.
-- Managers can login to view and approve/deny reimbursement requests.
-  - Managers can view statistics about employee reimbursements.
+- Employees can submit reimbursement requests.
+- Employees can view previous reimbursement requests.
+- Managers can view reimbursement requests.
+- Managers can approve reimbursement requests.
+- Managers can deny reimbursement requests.
+- Managers can view statistics about employee reimbursements.
 
 **to do**
 - update webpages to have uniform color/appearances.
 - create dynamic charts that represent the statistics currently shown in just numeric values.
+- add an easy to use method to close the application
 
 ## Getting Started
+- Database:
+  -  
+- to clone:
+  -  git clone info here
+- to deploy:
+  - navigate to the Pythoncode file in your chosen terminal
+  - use the command py main.py to start the application(currently no in-app way to end the application)
+
+## Usage
+- Employees can log into the reimbursement portal to manage their reimbursement requests:
+  - Employees can make reimbursement requests
+  - Employees can give a reason for their reimbursement requests
+  - Employees can view the status of their reimbursement request
+- Managers can log into the reimbursement portal to manage employee reimbursement requests:
+  - Managers can approve or deny requests using the status code key provided within the portal
+  - Managers can view statistics 
