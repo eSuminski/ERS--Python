@@ -50,3 +50,5 @@ This application was designed for Viridian Dynamics employees to be able to subm
 - Managers can log into the reimbursement portal to manage employee reimbursement requests:
   - Managers can approve or deny requests using the status code key provided within the portal
   - Managers can view statistics 
+
+  I am adding this for a git example
