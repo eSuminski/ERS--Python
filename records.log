@@ -1,0 +1,17 @@
+2021-09-16 08:23:02,817 INFO  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+2021-09-16 08:25:04,394 INFO  * Running on http://127.0.0.1:5000/ (Press CTRL+C to quit)
+2021-09-16 08:25:38,178 ERROR Exception on /login [GET]
+Traceback (most recent call last):
+  File "C:\Users\EricSuminski\AppData\Local\Programs\Python\Python39\lib\site-packages\flask\app.py", line 2070, in wsgi_app
+    response = self.full_dispatch_request()
+  File "C:\Users\EricSuminski\AppData\Local\Programs\Python\Python39\lib\site-packages\flask\app.py", line 1516, in full_dispatch_request
+    return self.finalize_request(rv)
+  File "C:\Users\EricSuminski\AppData\Local\Programs\Python\Python39\lib\site-packages\flask\app.py", line 1535, in finalize_request
+    response = self.make_response(rv)
+  File "C:\Users\EricSuminski\AppData\Local\Programs\Python\Python39\lib\site-packages\flask\app.py", line 1698, in make_response
+    raise TypeError(
+TypeError: The view function for 'initial_login' did not return a valid response. The function either returned None or ended without a return statement.
+2021-09-16 08:25:38,192 INFO 127.0.0.1 - - [16/Sep/2021 08:25:38] "[35m[1mGET /login HTTP/1.1[0m" 500 -
+2021-09-16 08:25:38,815 INFO 127.0.0.1 - - [16/Sep/2021 08:25:38] "[33mGET /favicon.ico HTTP/1.1[0m" 404 -
+2021-09-16 08:25:45,736 INFO 127.0.0.1 - - [16/Sep/2021 08:25:45] "GET /hello HTTP/1.1" 200 -
+2021-09-16 08:26:11,288 INFO 127.0.0.1 - - [16/Sep/2021 08:26:11] "[31m[1mGET /employee HTTP/1.1[0m" 400 -
